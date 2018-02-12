@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!--Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Anton|Barlow+Condensed:400,700,900|Cutive+Mono|Open+Sans+Condensed:300,300i,700|Six+Caps" rel="stylesheet">
+
+    <!--The stylesheet-->
+    <link rel="stylesheet" href="css/main.css">
+    <title>To do-list</title>
+</head>
+<body>
+    <main>
+        <div class="wrapper_box_lists">
+            <div class="box_list">
+                <h2>Enter your name</h2>
+                <form id="add" 
+                action="#" 
+                method="POST">
+                    <input type="text" name="createdBy">
+                    <h3>Add task</h3>
+                    <input type="text" name="title">
+                    <br/>
+                    <input type="submit" value="Add">
+                </form>
+            </div><!--.add_to_do-->
+                
+            <div class="box_list">
+                <h4>What to do:</h4>
+                <ul>
+                    <li class="task">Task</li>
+                    <li class="name">Name</li>
+                    <li class="add_priority_button">
+                    <form action="#"
+                    method="GET"
+                    class="add_priority">
+                        <input type="hidden"
+                        name="add_priority"
+                        value="1">
+                        <input type="submit"
+                        value="Add priority">
+                    </form>
+                    </li>
+                </ul>
+                <br/>
+                <hr/>
+                <br/>
+                <div class="form_wrapper">
+                <form id="edit"
+                action="#"
+                class="edit_task" 
+                  method="POST">
+                    <input type="number" 
+                    name="priority_' . $id . '"
+                    value="' . $priority . '">
+                    <input type="text" 
+                    name="title_' . $id . '" 
+                    value="' . $title . '">
+                                        
+                    <input type="text" 
+                    name="createdBy_' . $id . '"
+                    value="' . $createdBy . '">
+                                       
+                    <input type="submit" 
+                    value="Edit">
+                    </form><!--Form id="edit"-->
+
+                    <!--Knappar för redigering av listan-->  
+                    <form id="remove_task" 
+                    action="index.php"
+                    method="POST">
+                    <input type="hidden" 
+                    name="remove_' . $id . '"> 
+                    <input type="submit" 
+                    value="REMOVE">
+                    </form> 
+                
+                    <form id="complete" 
+                    action="index.php"
+                    method="POST">
+                                            
+                    <input type="hidden" 
+                    name="completed_' . $id . '">
+                                            
+                    <input type="submit" 
+                    value="DONE">
+                    </form>
+                </div><!--form_wrapper-->
+            </div><!--.box_existing_to_do-->
+        </div><!--.wrapper_lists-->
+    </main>   
+    <script src = "main.js"></script>
+</body>
+</html>
