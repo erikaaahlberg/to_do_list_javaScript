@@ -14,45 +14,84 @@
 </head>
 <body>
     <main>
-        <div class="wrapper_box_lists">
-            <div class="box_list">
-                <h2>Enter your name</h2>
-                <form id="add" 
+        <div class="box_input" id = "box_add_to_do">
+                <header>
+                    <div class = "tag_header">
+                        <h1>To do list</h1>
+                    </div>
+                </header>
+            <h2>Do some more!</h2>
+                <form id = "form_new_task" 
                 action="#" 
                 method="POST">
-                    <input type="text" name="createdBy">
-                    <h3>Add task</h3>
-                    <input type="text" name="title">
+                <div class = "wrapper_form">
+                    <div class = "wrapper_label_input" id = "wrapper_input_creator">
+                        <label for = "createdBy">
+                            Enter your name
+                        </label>
+                        <br/>
+                        <input type="text"
+                        id = "input_creator">
+                    </div><!--.label_input_wrapper-->
+                    
+                    <div class = "wrapper_label_input" id = "wrapper_input_new_task">
+                        <label for = "task">
+                            Add task
+                        </label>
+                        <br/>
+                        <input type="text" id="input_task">
+                    </div><!--.label_input_wrapper-->
+                </div><!--.form_wrapper-->
                     <br/>
-                    <input type="submit" value="Add">
+                    <input type="submit" value="Add" class ="main_button"
+                    id = "add_button">
                 </form>
-            </div><!--.add_to_do-->
-                
-            <div class="box_list">
-                <h4>What to do:</h4>
-                <ul>
-                    <li class="task">Task</li>
-                    <li class="name">Name</li>
-                    <li class="add_priority_button">
-                    <form action="#"
-                    method="GET"
-                    class="add_priority">
-                        <input type="hidden"
-                        name="add_priority"
-                        value="1">
-                        <input type="submit"
-                        value="Add priority">
-                    </form>
-                    </li>
-                </ul>
-                <br/>
-                <hr/>
-                <br/>
-                <div class="form_wrapper">
-                <form id="edit"
+        </div><!--.add_to_do-->
+        
+        <div class="wrapper_box_lists">    
+            <div class="box_list" id = "box_to_do_list">
+                <h3>What to do?</h3>
+                <div class = "table_wrapper">
+                <table id = "table_to_do_list">
+                    <tr>
+                        <th class = "left_column">Name</th>
+                        <th class = "right_column">Task</th>
+                        <th class = "right">
+                            <!--<button id = "add_priority_button"
+                            class = "main_button">
+                                Add priority
+                            </button>-->
+                        </th>
+                    </tr>
+                </table>
+                </div><!--.table_wrapper-->
+            </div><!--.box_list-->
+
+            <div class = "box_list" id = "box_completed_list">
+                <h4>You did what?!</h4>
+                <div class = "table_wrapper">
+                    <table id = "table_completed_list">
+                        <tr>
+                            <th class = "left_column">Name</th>
+                            <th class = "right_column">Task</th>
+                        </tr>
+                        <tr>
+                            <td class = "left_column">Erika</td>
+                            <td class = "right_column">städa och göra läxan</td>
+                        </tr>
+                    </table>
+                </div><!--.table_wrapper-->
+            </div>
+        </div><!--.wrapper_lists-->
+    </main>   
+    <script src = "main.js"></script>
+</body>
+</html>
+
+                <!--<div class="form_wrapper">
+                <form id = "edit_to_do_list"
                 action="#"
-                class="edit_task" 
-                  method="POST">
+                method="POST">
                     <input type="number" 
                     name="priority_' . $id . '"
                     value="' . $priority . '">
@@ -68,7 +107,7 @@
                     value="Edit">
                     </form><!--Form id="edit"-->
 
-                    <!--Knappar för redigering av listan-->  
+                    <!--Knappar för redigering av listan  
                     <form id="remove_task" 
                     action="index.php"
                     method="POST">
@@ -87,11 +126,4 @@
                                             
                     <input type="submit" 
                     value="DONE">
-                    </form>
-                </div><!--form_wrapper-->
-            </div><!--.box_existing_to_do-->
-        </div><!--.wrapper_lists-->
-    </main>   
-    <script src = "main.js"></script>
-</body>
-</html>
+                    </form>-->

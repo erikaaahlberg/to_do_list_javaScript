@@ -5,18 +5,80 @@
 body{
     background-image: url("../images/tabletop2.jpg");
     background-size: cover;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
+
+
+/*---------------HEADER----------------*/
+.tag_header{
+    -ms-transform: rotate(-35deg); 
+    -webkit-transform: rotate(-35deg); 
+    transform: rotate(-35deg);
+    background: rgb(119, 128, 156);
+    display: inline-block;
+    position: relative;
+    left: -50px;
+    padding-left: 10px;
+    padding-right: 10px;
+    h1{
+        color: white;
+        margin: 0px;
+        font-size: 1.3em;
+    }
+}
+
+
+/*--------------MAIN----------------*/
+/* Box with input for new task */
+.box_input{
+    @extend .box_list;
+    max-width: 650px;
+    margin-top: 70px;
+}
+label{
+    font-weight: 700;
+    color: rgb(83, 83, 83);
+    font-size: 1.2em;
+}
+input[type=text]{
+    font-weight: 700;
+    font-size: 1.1em;
+    width: 100%; 
+    max-width: 300px;  
+    border: none;
+    margin-top: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background: transparent;
+}
+input.main_button,
+button.main_button{
+    @include button;
+}
+#form_new_task{
+    input[type=text]{
+        margin-bottom: 40px;
+        border-bottom: 1px solid rgb(167, 185, 8); 
+        font-weight: 400;    
+    }
+}
+
+
+/* Boxes with both lists */
 .wrapper_box_lists{
     margin: auto;
 }
 .box_list{   
     margin: 20px;
-    flex-basis: 45%;
     background: rgba(252, 250, 250, 0.842);
     padding: 20px;
     box-sizing: border-box;
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.466);
     h2, h3, h4{
+        margin-bottom: 50px;
+        margin-top: 50px;
+        text-align: center;
         font-family: 'Open Sans Condensed', sans-serif;
         text-transform: uppercase;
         font-size: 1.8em;
@@ -25,23 +87,38 @@ body{
         color: rgb(167, 185, 8);
     }
 }
-input[type=text]{   
-    border: none;
-    padding: 10px;
-    background: rgba(209, 209, 209, 0.897);
+table{
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    th{
+        @extend label;
+    }
 }
-input[type=submit]{
-    text-transform: uppercase;
-    font-family: 'Open Sans Condensed', sans-serif;
-    letter-spacing: 3px;
-    font-size: 1em;
-    color: white;
-    background: #5c5b6b;
-    padding: 2px 10px 2px 10px;
-    shadow: none;
-    border: none;
+th, td{
+    border-bottom: 1px solid rgb(194, 194, 194);
+    padding-bottom: 5px;
+    padding-top: 5px;
 }
-ul{
-    padding: 0px;
-    list-style: none;
+th.left_column,
+td.left_column{
+    border-right: 1px solid rgb(194, 194, 194);
+    width: 20%;
+}
+th.right_column,
+td.right_column{
+    width: 80%;
+    padding-left: 10px;
+}
+#table_completed_list{
+    td.right_column{
+        font-style: italic;
+        color: rgb(124, 124, 124);
+    }
+}
+/*th.right{
+    width: 30%;
+}*/
+td{
+    
 }
