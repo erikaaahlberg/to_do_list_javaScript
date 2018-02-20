@@ -1,25 +1,33 @@
 const addButton = document.getElementById("add_button");
 
-addButton.addEventListener('click', function(){
-    for(var i = 1; i <= toDoList; i++){
-        var taskId = i;
-    }
+addButton.addEventListener("click", function(){
+    event.preventDefault();
+
+    //Fetch parent-div
+    const wrapperBoxList = document.getElementById("wrapper_box_lists");
+    
+    wrapperBoxList.className = "wrapper_box_lists";
+    
     const creator = document.getElementById("input_creator").value;
-
-    const task = document.getElementById("input_creator").value;
-
+    const task = document.getElementById("input_task").value;
     const finished = false;
 
-    function List(creator, task, id, finished){
+    function List(creator, task, finished){
         this.creator  = creator;
         this.task     = task;
-        this.id       = id;
         this.finished = finished;
     }
+    var toDoList = new List(creator, task, finished);
 
-    const toDoList = List(creator, task, taskId, finished);
+    saveInLocalStorage("toDoList", toDoList);
 
-    
-console.log(toDoList);
+    function saveInLocalStorage(key, value){
+        localStorage.setItem(key, JSON.stringify(value));
+    }
+    function getFromLocalStorage(key){
+        var fetchedList = JSON.parse(localStorage.getItem(key));
+        return fetchedList;
+    }
+    storedToDoList = getFromLocalStorage("toDoList");
+    console.log(storedToDoList);
 })
-

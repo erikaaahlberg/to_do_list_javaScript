@@ -1,4 +1,4 @@
-/*---------HEADER-----------*/
+/*---------Header-----------*/
 .tag_header{
     left: -70px;
     h1{
@@ -7,10 +7,13 @@
 }
 
 
-/*----------------Box input---------------*/
+/*Box input*/
 .box_input{
     margin: 70px auto;
     margin-bottom: 0px;
+    h2{
+        font-size: 1.9em;
+    }
 }
 .wrapper_form{
     display: flex;
@@ -25,15 +28,28 @@
 }
 
 
-/*----------------Box lists---------------*/
-.wrapper_box_lists{
+/*Box lists*/
+.box_list{
+    padding: 30px;
+    margin: 70px auto;
+    h3, h4{
+        margin-top: 50px;
+        font-size: 1.9em;
+    }
+}
+.wrapper_box_lists_flexed{
     display: flex;
     justify-content: space-around;
     flex-direction: row;
 }
-.box_list{
+.box_list_flexed{
+    @include box;
+    margin: 10px auto;
     flex-basis: 50%;
-    padding: 30px;
+    h3, h4{
+        margin-top: 50px;
+        font-size: 1.9em;
+    }
 }
 input[type=text]{
     max-width: 400px;

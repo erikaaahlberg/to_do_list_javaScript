@@ -1,6 +1,7 @@
 *{
     border-radius: 3px;
     font-family: 'Cutive Mono', monospace;
+    margin: auto;
 }
 body{
     background-image: url("../images/tabletop2.jpg");
@@ -10,7 +11,7 @@ body{
 }
 
 
-/*---------------HEADER----------------*/
+/*---------------Header----------------*/
 .tag_header{
     -ms-transform: rotate(-35deg); 
     -webkit-transform: rotate(-35deg); 
@@ -29,7 +30,7 @@ body{
 }
 
 
-/*--------------MAIN----------------*/
+/*--------------Main----------------*/
 /* Box with input for new task */
 .box_input{
     @extend .box_list;
@@ -59,35 +60,29 @@ button.main_button{
 #form_new_task{
     input[type=text]{
         margin-bottom: 40px;
-        border-bottom: 1px solid rgb(167, 185, 8); 
-        font-weight: 400;    
+        border-bottom: 1px solid rgb(167, 185, 8);font-weight: 400;    
     }
 }
 
 
 /* Boxes with both lists */
+.hidden{
+    display: none;
+}
 .wrapper_box_lists{
     margin: auto;
 }
-.box_list{   
-    margin: 20px;
-    background: rgba(252, 250, 250, 0.842);
+.box_list{
+    @include box;   
+    margin: 20px auto;
     padding: 20px;
-    box-sizing: border-box;
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.466);
     h2, h3, h4{
         margin-bottom: 50px;
-        margin-top: 50px;
-        text-align: center;
-        font-family: 'Open Sans Condensed', sans-serif;
-        text-transform: uppercase;
-        font-size: 1.8em;
-        font-weight: 700;
-        letter-spacing: 5px;
-        color: rgb(167, 185, 8);
+        margin-top: 0px;
+        font-size: 1.5em;
     }
 }
-table{
+table.table_list{
     width: 100%;
     text-align: left;
     border-collapse: collapse;
