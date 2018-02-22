@@ -43,12 +43,23 @@ function printList(table, fetchedList){
     }
 } // printList collapse
 
-function addTask(existingList){
-    var toDoList = existingList;
+function saveInLocalStorage(key, value){
+    localStorage.setItem(key, JSON.stringify(value));
+}
+function addListItem(id, listItem, List){
+    List[id] = listItem;
+    /*if(List === null){
+        updatedList[id] = listItem;
+    }else{
+        updatedList = List;
+        updatedList[id] = listItem;
+    }*/
+    return List;
+}
+function addTask(id){
     const creator = document.getElementById("input_creator").value;
     const task = document.getElementById("input_task").value;
     const finished = false;
-    const id = toDoList.length;
 
     function ListItem(creator, task, finished, id){
         this.creator  = creator;
@@ -57,33 +68,42 @@ function addTask(existingList){
         this.id       = id;
     }
 
-    var listItem = new ListItem(creator, task, finished);
-    toDoList[id] = listItem;
-  
-    function saveInLocalStorage(key, value){
-        localStorage.setItem(key, JSON.stringify(value));
-    }
-    saveInLocalStorage("toDoList", toDoList);
+    var listItem = new ListItem(creator, task, finished, id);
+    return listItem;
+
 } //addTask collapse
 //end of functions
 
+//localStorage.removeItem("toDoList");
 // Fetching these elements to give them a new class
 const fetchedToDoList = getFromLocalStorage("toDoList");
 const wrapperBoxList = document.getElementById("wrapper_box_lists");
 const tableToDoList = document.getElementById("table_to_do_list");
+var toDoList = [];
 
-if(fetchedToDoList.length > 0){
+if(fetchedToDoList != null){
     wrapperBoxList.className = "wrapper_box_lists";
-    printList(tableToDoList, fetchedToDoList);
+    var taskId = fetchedToDoList.length;
+    toDoList = fetchedToDoList;
+    printList(tableToDoList, toDoList);
+}else{
+    var taskId = 0;
 }
-
+//fetchedToDoList.length > 0
 const addButton = document.getElementById("add_button");
-const checkButton = document.get
 
 addButton.addEventListener("click", function(){
     event.preventDefault();
-    addTask(fetchedToDoList);
-    const toDoList = getFromLocalStorage("toDoList");
+    wrapperBoxList.className = "wrapper_box_lists";
+
+    //Creates a new list item
+    const newListItem = addTask(taskId);
+    console.log(newListItem);
+    console.log(taskId);
+    console.log(toDoList);
+    const updatedToDoList = addListItem(taskId, newListItem, toDoList); 
+    saveInLocalStorage("toDoList", updatedToDoList);
+    //const toDoList = getFromLocalStorage("toDoList");
     //const lastAdded = toDoList[toDoList.length];
 
     //createTableParagraph(tableToDoList, lastAdded.creator, lastAdded.task, lastAdded.id);
@@ -94,4 +114,3 @@ addButton.addEventListener("click", function(){
     /*const lastAdded = toDoList[toDoList.length];
     createTableParagraph(tableToDoList, lastAdded.creator, lastAdded.task);*/
 })
-
