@@ -39,10 +39,11 @@ function createTableParagraph(table, name, task, id){
 } // createTableParagraph collapse
 function removeTableParagraph(tableId, tableRowId, list){
     var element = document.getElementById(tableRowId);
+    console.log(element);
     element.remove();
-    const table = document.getElementById(tableId);
-    table.className = "hidden";
     if(list === null || list.length < 1){
+        const table = document.getElementById(tableId);
+        table.className = "hidden";
     }
 }
 function printList(table, fetchedList){
@@ -91,7 +92,6 @@ var toDoList = [];
 console.log(toDoList);
 if(fetchedToDoList != null && fetchedToDoList.length > 0){
     wrapperBoxList.className = "wrapper_box_lists";
-    var taskId = fetchedToDoList.length;
     toDoList = fetchedToDoList;
     printList(tableToDoList, toDoList);
     /*for(var i = 0; i < toDoList.length; i++){
@@ -105,7 +105,6 @@ if(fetchedToDoList != null && fetchedToDoList.length > 0){
         })
     }*/
 }else if(fetchedToDoList === null || fetchedToDoList.length === 0){
-    var taskId = 0;
     wrapperBoxList.className = "hidden";
 }
 
@@ -114,6 +113,7 @@ const addButton = document.getElementById("add_button");
 addButton.addEventListener("click", function(){
     event.preventDefault();
     wrapperBoxList.className = "wrapper_box_lists";
+    var taskId = toDoList.length;
     var creator = document.getElementById("input_creator").value;
     var task = document.getElementById("input_task").value;
     var finished = false;
@@ -145,20 +145,20 @@ addButton.addEventListener("click", function(){
 /*for(var i = 0; i < fetchedToDoList.length; i++){
     console.log(fetchedToDoList[i].id);
 }*/
-//var fetchedToDoList = getFromLocalStorage("toDoList");
-//if(toDoList != null && toDoList.length > 0){
-toDoList = getFromLocalStorage("toDoList");
+//toDoList = getFromLocalStorage("toDoList");
+if(toDoList != null && toDoList.length > 0){
     for(var i = 0; i < toDoList.length; i++){
         var taskToRemoveId = toDoList[i].id;
+        console.log(taskToRemoveId);
         var removeButton = document.getElementById(`button_remove_task_${taskToRemoveId}`);
         removeButton.addEventListener("click", function(){
+            removeTableParagraph("table_to_do_list", `task_${taskToRemoveId}`, toDoList);
             const editedList = removeTask(taskToRemoveId, toDoList);
             saveInLocalStorage("toDoList", editedList);
             const updatedList = getFromLocalStorage("toDoList");
-            removeTableParagraph("table_to_do_list", `task_${taskToRemoveId}`, updatedList);
             //printList(tableToDoList, updatedList);
         })
     }
-//}
+}
 
 
