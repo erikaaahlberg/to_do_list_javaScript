@@ -4,7 +4,7 @@ function getFromLocalStorage(key){
     return fetchedList;
 } // getFromLocalStorage collapse
 
-function createTableParagraph(table, name, task, id){
+function createTableParagraph(boxId, tableId, name, task, taskId){
     const tableRow  = document.createElement("tr");
     const leftCell  = document.createElement("td");
     const middleCell = document.createElement("td");
@@ -12,23 +12,25 @@ function createTableParagraph(table, name, task, id){
     const buttonRemove = document.createElement("BUTTON");
     const nameNode = document.createTextNode(name);
     const taskNode = document.createTextNode(task);
-    const tableId = table.getAttribute("id");
+    const table = document.getElementById(tableId);
+    const box = document.getElementById(boxId);
     buttonRemove.innerHTML = '<i class="fas fa-trash"></i>';
 
     if(tableId === "table_to_do_list"){
         const buttonCheck = document.createElement("BUTTON");
         buttonCheck.className = "status_button";
-        buttonCheck.setAttribute("id", `button_check_task_${id}`);
+        buttonCheck.setAttribute("id", `button_check_task_${taskId}`);
         buttonCheck.innerHTML = '<i class="fas fa-check"></i>';
         rightCell.appendChild(buttonCheck);
+        buttonCheckEventListener(buttonCheck, taskId);
     }
-
-    tableRow.setAttribute("id", `task_${id}`);
+    box.className = "box_list";
+    tableRow.setAttribute("id", `task_${taskId}`);
     leftCell.className = "left_column";
     middleCell.className = "middle_column";
     rightCell.className = "right_column";
     buttonRemove.className = "status_button";
-    buttonRemove.setAttribute("id", `button_remove_task_${id}`);
+    buttonRemove.setAttribute("id", `button_remove_task_${taskId}`);
     leftCell.appendChild(nameNode);
     middleCell.appendChild(taskNode);
     rightCell.appendChild(buttonRemove)
@@ -36,23 +38,54 @@ function createTableParagraph(table, name, task, id){
     tableRow.appendChild(middleCell);
     tableRow.appendChild(rightCell);
     table.appendChild(tableRow);
+
+    buttonRemoveEventListener(buttonRemove, taskId, tableId, boxId);
 } // createTableParagraph collapse
-function removeTableParagraph(tableId, tableRowId, list){
-    var element = document.getElementById(tableRowId);
-    console.log(element);
-    element.remove();
-    if(list === null || list.length < 1){
-        const table = document.getElementById(tableId);
-        table.className = "hidden";
-    }
+
+function buttonRemoveEventListener(buttonRemove, taskId, tableId, boxId){
+    buttonRemove.addEventListener("click", function(){
+        const existingToDo = getFromLocalStorage("toDoList");
+        const editedList = removeTask(taskId, existingToDo);
+        console.log(editedList);
+        saveInLocalStorage("toDoList", editedList);
+        //const updatedList = getFromLocalStorage("toDoList");
+        //console.log(updatedList);
+        removeTableParagraph(tableId, `task_${taskId}`, boxId);
+    })    
 }
-function printList(table, fetchedList){
+
+function buttonCheckEventListener(buttonCheck, taskId){
+    buttonCheck.addEventListener("click", function(){
+        const editedTask = checkTask(taskId);
+        removeTableParagraph("table_to_do_list", `task_${taskId}`);
+        createTableParagraph("box_completed_list", "table_completed_list", editedTask.name, editedTask.task, editedTask.id);
+    })
+}
+function checkTask(taskId){
+    var toDoList = getFromLocalStorage("toDoList");
+    toDoList[taskId].finished = true;
+    saveInLocalStorage("toDoList", toDoList);
+    return toDoList;
+}
+
+function removeTableParagraph(tableId, tableRowId, boxId){
+    const parentElement = document.getElementById(tableId);
+    const childElement = document.getElementById(tableRowId);
+    const toDoList = getFromLocalStorage("toDoList");
+    console.log(`${parentElement} och ${childElement}`);
+    parentElement.removeChild(childElement);
+    if(!toDoList || toDoList.length < 1){
+        const box = document.getElementById(boxId);
+        box.className = "hidden";
+    }
+} // removeTableParagraph collapse
+
+function printList(box, table, fetchedList){
     for(var i = 0; i < fetchedList.length; i++){
-        createTableParagraph(table, fetchedList[i].creator, fetchedList[i].task, fetchedList[i].id);
+        createTableParagraph(box, table, fetchedList[i].creator, fetchedList[i].task, fetchedList[i].id);
     }
 } // printList collapse
-function removeFromLocalStorage(){
-}
+
 function saveInLocalStorage(key, value){
     localStorage.setItem(key, JSON.stringify(value));
 }
@@ -73,38 +106,39 @@ function removeTask(id, list){
     //console.log(indexToRemove); 
     list.splice(indexToRemove, 1);
     return list;
-};
-function updateList(list){
-
 }
+
 
 //localStorage.removeItem("toDoList");
 // Fetching these elements to give them a new class
-var fetchedToDoList = getFromLocalStorage("toDoList");
+const fetchedToDoList = getFromLocalStorage("toDoList");
 const wrapperBoxList = document.getElementById("wrapper_box_lists");
-const tableToDoList = document.getElementById("table_to_do_list");
+var completedToDoList = [];
 var toDoList = [];
 //var taskId = fetchedToDoList.length;
 
 /*if(taskId > 0){
     wrapperBoxList.className = "wrapper_box_lists";    
 }*/
-console.log(toDoList);
-if(fetchedToDoList != null && fetchedToDoList.length > 0){
+
+
+
+if(fetchedToDoList && fetchedToDoList.length > 0){
     wrapperBoxList.className = "wrapper_box_lists";
-    toDoList = fetchedToDoList;
-    printList(tableToDoList, toDoList);
-    /*for(var i = 0; i < toDoList.length; i++){
-        const taskToRemoveId = toDoList[i].id;
-        const checkButton = document.getElementById(`button_remove_task_${id}`);
-        checkButton.addEventListener("click", function(){
-            event.preventDefault();
-            const editedList = removeTask(taskToRemoveId, toDoList);
-            saveInLocalStorage("toDoList", editedList);
-            toDoList = getFromLocalStorage("toDoList");
-        })
-    }*/
-}else if(fetchedToDoList === null || fetchedToDoList.length === 0){
+    for (var i = 0; i < fetchedToDoList.length; i++){
+        if (fetchedToDoList[i].finished){
+            completedToDoList[i] = fetchedToDoList[i];
+        }else{
+            toDoList[i] = fetchedToDoList[i];
+        }
+    }  
+    if(toDoList.length > 0){
+        printList("box_to_do_list", "table_to_do_list", toDoList);
+    }
+    if(completedToDoList.length > 0){
+        printList("box_completed_list", "table_completed_list", completedToDoList);
+    }
+}else if(!fetchedToDoList || fetchedToDoList.length === 0){
     wrapperBoxList.className = "hidden";
 }
 
@@ -114,15 +148,15 @@ addButton.addEventListener("click", function(){
     event.preventDefault();
     wrapperBoxList.className = "wrapper_box_lists";
     var taskId = toDoList.length;
-    var creator = document.getElementById("input_creator").value;
-    var task = document.getElementById("input_task").value;
+    var creator = document.getElementById("input_creator");
+    var task = document.getElementById("input_task");
     var finished = false;
     
     console.log(taskId);
     if(creator != "" && task != ""){
         
     }
-    const newListItem = new ListItem(creator, task, finished, taskId);
+    const newListItem = new ListItem(creator.value, task.value, finished, taskId);
     //Creates a new list item
 
     creator.value = "";
@@ -131,9 +165,10 @@ addButton.addEventListener("click", function(){
     //saveInLocalStorage(`toDo_${taskId}`, newListItem);
     const updatedToDoList = addListItem(taskId, newListItem, toDoList); 
     saveInLocalStorage("toDoList", updatedToDoList);
-    toDoList = getFromLocalStorage("toDoList");
-    const lastAdded = toDoList[taskId];
-    createTableParagraph(tableToDoList, lastAdded.creator, lastAdded.task, lastAdded.id);
+    //toDoList = getFromLocalStorage("toDoList");
+    //const lastAdded = toDoList[taskId];
+    //createTableParagraph("table_to_do_list", lastAdded.creator, lastAdded.task, lastAdded.id);
+    createTableParagraph("box_to_do_list", "table_to_do_list", newListItem.creator, newListItem.task, newListItem.id);
 
     //printList(tableToDoList, toDoList);
     for(const key of toDoList){
@@ -146,19 +181,23 @@ addButton.addEventListener("click", function(){
     console.log(fetchedToDoList[i].id);
 }*/
 //toDoList = getFromLocalStorage("toDoList");
-if(toDoList != null && toDoList.length > 0){
+/*if(toDoList != null && toDoList.length > 0){
     for(var i = 0; i < toDoList.length; i++){
         var taskToRemoveId = toDoList[i].id;
         console.log(taskToRemoveId);
         var removeButton = document.getElementById(`button_remove_task_${taskToRemoveId}`);
+        console.log(removeButton);
         removeButton.addEventListener("click", function(){
-            removeTableParagraph("table_to_do_list", `task_${taskToRemoveId}`, toDoList);
             const editedList = removeTask(taskToRemoveId, toDoList);
+            console.log(editedList);
             saveInLocalStorage("toDoList", editedList);
             const updatedList = getFromLocalStorage("toDoList");
+            console.log(updatedList);
+            removeTableParagraph("table_to_do_list", `task_${taskToRemoveId}`, updatedList);
             //printList(tableToDoList, updatedList);
         })
     }
-}
+}*/
+
 
 
