@@ -4,14 +4,14 @@ function getFromLocalStorage(key){
     return fetchedList;
 } // getFromLocalStorage collapse
 
-function createTableParagraph(boxId, tableId, name, task, taskId){
+function createTableParagraph(boxId, tableId, listItem){
     const tableRow  = document.createElement("tr");
     const leftCell  = document.createElement("td");
     const middleCell = document.createElement("td");
     const rightCell = document.createElement("td");
     const buttonRemove = document.createElement("BUTTON");
-    const nameNode = document.createTextNode(name);
-    const taskNode = document.createTextNode(task);
+    const nameNode = document.createTextNode(listItem.creator);
+    const taskNode = document.createTextNode(listItem.task);
     const table = document.getElementById(tableId);
     const box = document.getElementById(boxId);
     buttonRemove.innerHTML = '<i class="fas fa-trash"></i>';
@@ -56,33 +56,44 @@ function buttonRemoveEventListener(buttonRemove, taskId, tableId, boxId){
 
 function buttonCheckEventListener(buttonCheck, taskId){
     buttonCheck.addEventListener("click", function(){
-        const editedTask = checkTask(taskId);
-        removeTableParagraph("table_to_do_list", `task_${taskId}`);
-        createTableParagraph("box_completed_list", "table_completed_list", editedTask.name, editedTask.task, editedTask.id);
+        var editedTask = checkTask(taskId);
+        removeTableParagraph("table_to_do_list", `task_${taskId}`, "box_to_do_list");
+        createTableParagraph("box_completed_list", "table_completed_list", editedTask);
     })
 }
 function checkTask(taskId){
     var toDoList = getFromLocalStorage("toDoList");
     toDoList[taskId].finished = true;
     saveInLocalStorage("toDoList", toDoList);
-    return toDoList;
+    return toDoList[taskId];
 }
 
 function removeTableParagraph(tableId, tableRowId, boxId){
     const parentElement = document.getElementById(tableId);
     const childElement = document.getElementById(tableRowId);
     const toDoList = getFromLocalStorage("toDoList");
-    console.log(`${parentElement} och ${childElement}`);
+    console.log(toDoList);
     parentElement.removeChild(childElement);
-    if(!toDoList || toDoList.length < 1){
-        const box = document.getElementById(boxId);
-        box.className = "hidden";
+    for (var i = 0; i < toDoList.length; i++){
+            
     }
+    /*if(!toDoList.includes(true)){
+        const boxToDo = document.getElementById("box_to_do_list");
+        boxToDo.className = "hidden";
+    }else if(!toDoList.includes(false)){
+        const boxCompleted = document.getElementById("box_completed_list");
+        boxCompleted.className = "hidden";
+    }
+    if (!toDoList || toDoList.length < 1){
+        const box = document.getElementById(boxId);
+        console.log(box);
+        box.className = "hidden";
+    }*/
 } // removeTableParagraph collapse
 
 function printList(box, table, fetchedList){
     for(var i = 0; i < fetchedList.length; i++){
-        createTableParagraph(box, table, fetchedList[i].creator, fetchedList[i].task, fetchedList[i].id);
+        createTableParagraph(box, table, fetchedList[i]);
     }
 } // printList collapse
 
@@ -92,13 +103,14 @@ function saveInLocalStorage(key, value){
 function addListItem(id, listItem, List){
     List[id] = listItem;
     return List;
-}
+}// addListItem collapse
 function ListItem(creator, task, finished, id){
     this.creator  = creator;
     this.task     = task;
     this.finished = finished;
     this.id       = id;
 }// ListItem collapse
+
 function removeTask(id, list){
     const indexToRemove = list.map(function(item){
         return item.id; 
@@ -111,7 +123,7 @@ function removeTask(id, list){
 
 //localStorage.removeItem("toDoList");
 // Fetching these elements to give them a new class
-const fetchedToDoList = getFromLocalStorage("toDoList");
+const fetchedList = getFromLocalStorage("toDoList");
 const wrapperBoxList = document.getElementById("wrapper_box_lists");
 var completedToDoList = [];
 var toDoList = [];
@@ -123,22 +135,26 @@ var toDoList = [];
 
 
 
-if(fetchedToDoList && fetchedToDoList.length > 0){
+if(fetchedList && fetchedList.length > 0){
     wrapperBoxList.className = "wrapper_box_lists";
-    for (var i = 0; i < fetchedToDoList.length; i++){
-        if (fetchedToDoList[i].finished){
-            completedToDoList[i] = fetchedToDoList[i];
+    for (var i = 0; i < fetchedList.length; i++){
+        if (fetchedList[i].finished){
+            createTableParagraph("box_completed_list", "table_completed_list", fetchedList[i]);
+            //completedToDoList[i] = fetchedToDoList[i];
         }else{
-            toDoList[i] = fetchedToDoList[i];
+            createTableParagraph("box_to_do_list", "table_to_do_list", fetchedList[i]);
+            //toDoList[i] = fetchedToDoList[i];
         }
     }  
-    if(toDoList.length > 0){
+    console.log(completedToDoList);
+    //console.log(toDoList);
+    /*if(toDoList.length > 0){
         printList("box_to_do_list", "table_to_do_list", toDoList);
     }
     if(completedToDoList.length > 0){
         printList("box_completed_list", "table_completed_list", completedToDoList);
-    }
-}else if(!fetchedToDoList || fetchedToDoList.length === 0){
+    }*/
+}else if(!fetchedList || fetchedList.length === 0){
     wrapperBoxList.className = "hidden";
 }
 
@@ -152,11 +168,13 @@ addButton.addEventListener("click", function(){
     var task = document.getElementById("input_task");
     var finished = false;
     
-    console.log(taskId);
-    if(creator != "" && task != ""){
-        
+    console.log(creator.value);
+    if(!creator.value || !task.value){
+        console.log("empty");
     }
-    const newListItem = new ListItem(creator.value, task.value, finished, taskId);
+    else if (creator.value && task.value){
+        var newListItem = new ListItem(creator.value, task.value, finished, taskId);
+    }
     //Creates a new list item
 
     creator.value = "";
@@ -168,7 +186,7 @@ addButton.addEventListener("click", function(){
     //toDoList = getFromLocalStorage("toDoList");
     //const lastAdded = toDoList[taskId];
     //createTableParagraph("table_to_do_list", lastAdded.creator, lastAdded.task, lastAdded.id);
-    createTableParagraph("box_to_do_list", "table_to_do_list", newListItem.creator, newListItem.task, newListItem.id);
+    createTableParagraph("box_to_do_list", "table_to_do_list", newListItem);
 
     //printList(tableToDoList, toDoList);
     for(const key of toDoList){
