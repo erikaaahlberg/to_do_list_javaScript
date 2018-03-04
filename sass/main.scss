@@ -1,5 +1,5 @@
 @import "../sass/mixins.scss";
 @import "../sass/mobile.scss";
 @media screen and (min-width: 768px){
-    @import "tablet.scss";
+    @import "../sass/tablet.scss";
 }

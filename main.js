@@ -12,6 +12,7 @@ function createTableParagraph(boxId, tableId, listItem){
     const buttonRemove = document.createElement("BUTTON");
     const nameNode = document.createTextNode(listItem.creator);
     const taskNode = document.createTextNode(listItem.task);
+    const taskId = listItem.id;
     const table = document.getElementById(tableId);
     const box = document.getElementById(boxId);
     buttonRemove.innerHTML = '<i class="fas fa-trash"></i>';
@@ -71,12 +72,31 @@ function checkTask(taskId){
 function removeTableParagraph(tableId, tableRowId, boxId){
     const parentElement = document.getElementById(tableId);
     const childElement = document.getElementById(tableRowId);
-    const toDoList = getFromLocalStorage("toDoList");
-    console.log(toDoList);
     parentElement.removeChild(childElement);
+    checkLengthOfLists();
+    console.log(toDoList);
+} // removeTableParagraph collapse
+
+function checkLengthOfLists(){
+    const toDoList = getFromLocalStorage("toDoList");
+    const boxToDo = document.getElementById("box_to_do_list");
+    const boxCompleted = document.getElementById("box_completed_list");
+    var finished = 0;
+    var unfinished = 0;
     for (var i = 0; i < toDoList.length; i++){
-            
+        if(toDoList[i].finished){
+            finished ++;
+        }else{
+            unfinished++;
+        }    
     }
+    if(finished < 1){
+        boxCompleted.className = "hidden";
+    }
+    if(unfinished < 1){
+        boxToDo.className = "hidden";
+    }
+}
     /*if(!toDoList.includes(true)){
         const boxToDo = document.getElementById("box_to_do_list");
         boxToDo.className = "hidden";
@@ -89,7 +109,7 @@ function removeTableParagraph(tableId, tableRowId, boxId){
         console.log(box);
         box.className = "hidden";
     }*/
-} // removeTableParagraph collapse
+ 
 
 function printList(box, table, fetchedList){
     for(var i = 0; i < fetchedList.length; i++){
@@ -99,7 +119,7 @@ function printList(box, table, fetchedList){
 
 function saveInLocalStorage(key, value){
     localStorage.setItem(key, JSON.stringify(value));
-}
+} // saveInLocalStorage collapse
 function addListItem(id, listItem, List){
     List[id] = listItem;
     return List;
@@ -115,10 +135,9 @@ function removeTask(id, list){
     const indexToRemove = list.map(function(item){
         return item.id; 
     }).indexOf(id);
-    //console.log(indexToRemove); 
     list.splice(indexToRemove, 1);
     return list;
-}
+} // removeTask collapse
 
 
 //localStorage.removeItem("toDoList");
