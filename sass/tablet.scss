@@ -37,20 +37,6 @@
         font-size: 1.9em;
     }
 }
-.wrapper_box_lists_flexed{
-    display: flex;
-    justify-content: space-around;
-    flex-direction: row;
-}
-.box_list_flexed{
-    @include box;
-    margin: 10px auto;
-    flex-basis: 50%;
-    h3, h4{
-        margin-top: 50px;
-        font-size: 1.9em;
-    }
-}
 input[type=text]{
     max-width: 400px;
 }
