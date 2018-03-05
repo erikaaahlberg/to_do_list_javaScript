@@ -1,57 +1,31 @@
-//localStorage.removeItem("toDoList");
-// Fetching these elements to give them a new class
 const fetchedList = getFromLocalStorage("toDoList");
+// Fetching this element to eventually give it a new class
 const wrapperBoxList = document.getElementById("wrapper_box_lists");
+// This variabel is separate from fetchedList in case of fetchedList turns out to be null. It's empty until new to do's are added
 var toDoList = [];
-//var taskId = fetchedToDoList.length;
 
-/*if(taskId > 0){
-    wrapperBoxList.className = "wrapper_box_lists";    
-}*/
-
-
-
+// If anything is saved in local storage the list should be printed when the page is loading
 if(fetchedList && fetchedList.length > 0){
     wrapperBoxList.className = "wrapper_box_lists";
-    console.log(fetchedList);
+    // Saving the values from fetchedList into toDoList since there are to do's in local storage
     toDoList = fetchedList;
-    printList(fetchedList);
-    /*for (var i = 0; i < fetchedList.length; i++){
-        console.log(fetchedList[i]);
-        if (fetchedList[i].finished){
-            createTableParagraph("box_completed_list", "table_completed_list", fetchedList[i]);
-            //completedToDoList[i] = fetchedToDoList[i];
-        }else{
-            createTableParagraph("box_to_do_list", "table_to_do_list", fetchedList[i]);
-            //toDoList[i] = fetchedToDoList[i];
-        }*/
+    printList(toDoList);
     }else if(!fetchedList || fetchedList.length === 0){
         wrapperBoxList.className = "hidden";
     }  
-    //console.log(toDoList);
-    /*if(toDoList.length > 0){
-        printList("box_to_do_list", "table_to_do_list", toDoList);
-    }
-    if(completedToDoList.length > 0){
-        printList("box_completed_list", "table_completed_list", completedToDoList);
-    }*/
-
 
 const addButton = document.getElementById("add_button");
-
 addButton.addEventListener("click", function(){
     event.preventDefault();
     wrapperBoxList.className = "wrapper_box_lists";
-    var taskId = toDoList.length;
-    var creatorInput = document.getElementById("input_creator");
-    var taskInput = document.getElementById("input_task");
-    var finished = false;
-    
+    const taskId = toDoList.length;
+    const creatorInput = document.getElementById("input_creator");
+    const taskInput = document.getElementById("input_task");
+    const finished = false;
     const isCreatorInputValid = checkValue(creatorInput.value);
     const isTaskInputValid = checkValue(taskInput.value);
     const isDuplicate = checkIfDuplicate(taskInput.value);
     var errorMessage = "";
-    var index = 0;
 
     if(!isCreatorInputValid){
         errorMessage = "Please enter a name";
@@ -64,71 +38,25 @@ addButton.addEventListener("click", function(){
     }
     if(errorMessage != ""){
         alert(errorMessage);
-    }
-    else{
+    }else{
         var newListItem = new ListItem(creatorInput.value, taskInput.value, finished, taskId);
-        console.log(newListItem);
         const updatedToDoList = addListItem(taskId, newListItem, toDoList); 
         saveInLocalStorage("toDoList", updatedToDoList);
         createTableParagraph("box_to_do_list", "table_to_do_list", newListItem);
         creatorInput.value = "";
         taskInput.value = "";
     }
-    //Creates a new list item
-
-    console.log(newListItem);
-    //saveInLocalStorage(`toDo_${taskId}`, newListItem);
-    //toDoList = getFromLocalStorage("toDoList");
-    //const lastAdded = toDoList[taskId];
-    //createTableParagraph("table_to_do_list", lastAdded.creator, lastAdded.task, lastAdded.id);
-
-    //printList(tableToDoList, toDoList);
-    for(const key of toDoList){
-        console.log(key);
-    }
-    /*const lastAdded = toDoList[toDoList.length];
-    createTableParagraph(tableToDoList, lastAdded.creator, lastAdded.task);*/
 })
-/*for(var i = 0; i < fetchedToDoList.length; i++){
-    console.log(fetchedToDoList[i].id);
-}*/
-//toDoList = getFromLocalStorage("toDoList");
-/*if(toDoList != null && toDoList.length > 0){
-    for(var i = 0; i < toDoList.length; i++){
-        var taskToRemoveId = toDoList[i].id;
-        console.log(taskToRemoveId);
-        var removeButton = document.getElementById(`button_remove_task_${taskToRemoveId}`);
-        console.log(removeButton);
-        removeButton.addEventListener("click", function(){
-            const editedList = removeTask(taskToRemoveId, toDoList);
-            console.log(editedList);
-            saveInLocalStorage("toDoList", editedList);
-            const updatedList = getFromLocalStorage("toDoList");
-            console.log(updatedList);
-            removeTableParagraph("table_to_do_list", `task_${taskToRemoveId}`, updatedList);
-            //printList(tableToDoList, updatedList);
-        })
-    }
-}*/
+
 // Functions
-function alertErrorMessages(errorMessages){
-    const box = document.getElementById("box_add_to_do");
-    setTimeout(function(){
-        for(var i = 0; i < errorMessages.length; i++){
-            const errorMessageParagraph = document.createElement("p");
-            const errorMessage = document.createTextNode(errorMessages[i]);
-            errorMessageParagraph.appendChild(errorMessage);
-            box.appendChild(errorMessageParagraph);
-        }
-    });
-}
 function checkValue(value){
     if(value){
         return true;
     }else{
         return false;
     }
-}
+} // checkValue collapse
+
 function checkIfDuplicate(task){
     const list = getFromLocalStorage("toDoList");
     for(var i = 0; i < toDoList.length; i++){
@@ -138,7 +66,8 @@ function checkIfDuplicate(task){
             return false;
         }
     }
-}
+}// checkIfDuplicate collapse
+
 function getFromLocalStorage(key){
     const fetchedList = JSON.parse(localStorage.getItem(key));
     return fetchedList;
@@ -157,6 +86,7 @@ function createTableParagraph(boxId, tableId, listItem){
     const box = document.getElementById(boxId);
     buttonRemove.innerHTML = '<i class="fas fa-trash"></i>';
 
+    // There's gonna be only a remove button for the tasks on the completed list
     if(tableId === "table_to_do_list"){
         const buttonCheck = document.createElement("BUTTON");
         buttonCheck.className = "status_button";
@@ -165,6 +95,7 @@ function createTableParagraph(boxId, tableId, listItem){
         rightCell.appendChild(buttonCheck);
         buttonCheckEventListener(buttonCheck, taskId);
     }
+    // Change the class of one certain box to only display box/es with content
     box.className = "box_list";
     tableRow.setAttribute("id", `task_${taskId}`);
     leftCell.className = "left_column";
@@ -187,13 +118,10 @@ function buttonRemoveEventListener(buttonRemove, taskId, tableId, boxId){
     buttonRemove.addEventListener("click", function(){
         const existingToDo = getFromLocalStorage("toDoList");
         const editedList = removeTask(taskId, existingToDo);
-        console.log(editedList);
         saveInLocalStorage("toDoList", editedList);
-        //const updatedList = getFromLocalStorage("toDoList");
-        //console.log(updatedList);
         removeTableParagraph(tableId, `task_${taskId}`, boxId);
     })    
-}
+} // buttonRemoveEventListener collapse
 
 function buttonCheckEventListener(buttonCheck, taskId){
     buttonCheck.addEventListener("click", function(){
@@ -201,22 +129,23 @@ function buttonCheckEventListener(buttonCheck, taskId){
         removeTableParagraph("table_to_do_list", `task_${taskId}`, "box_to_do_list");
         createTableParagraph("box_completed_list", "table_completed_list", editedTask);
     })
-}
+} // buttonCheckEventListener collapse
+
 function checkTask(taskId){
     var toDoList = getFromLocalStorage("toDoList");
     toDoList[taskId].finished = true;
     saveInLocalStorage("toDoList", toDoList);
     return toDoList[taskId];
-}
+} // checkTask collapse
 
 function removeTableParagraph(tableId, tableRowId, boxId){
     const parentElement = document.getElementById(tableId);
     const childElement = document.getElementById(tableRowId);
     parentElement.removeChild(childElement);
     checkLengthOfLists();
-    console.log(toDoList);
 } // removeTableParagraph collapse
 
+// Checks the lenght of the lists to keep box/es without content hidden
 function checkLengthOfLists(){
     const toDoList = getFromLocalStorage("toDoList");
     const boxToDo = document.getElementById("box_to_do_list");
@@ -239,10 +168,10 @@ function checkLengthOfLists(){
     if(unfinished < 1 || !toDoList){
         boxToDo.className = "hidden";
     }
-}
+} // checkLengthOfLists collapse
+
 function printList(fetchedList){
     for(var i = 0; i < fetchedList.length; i++){
-        //console.log(fetchedList[i].finished);
         if(fetchedList[i].finished){
             createTableParagraph("box_completed_list", "table_completed_list", fetchedList[i]);
         }else{
@@ -254,10 +183,12 @@ function printList(fetchedList){
 function saveInLocalStorage(key, value){
     localStorage.setItem(key, JSON.stringify(value));
 } // saveInLocalStorage collapse
+
 function addListItem(id, listItem, List){
     List[id] = listItem;
     return List;
 }// addListItem collapse
+
 function ListItem(creator, task, finished, id){
     this.creator  = creator;
     this.task     = task;
